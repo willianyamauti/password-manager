@@ -5,7 +5,6 @@ FONT = ("Arial", 12, 'normal')
 JUSTIFY = 'left'
 
 
-
 class View:
     def __init__(self, controller):
         self.controller = controller
@@ -63,11 +62,3 @@ class PswGenPanel:
         self.add_button = Button(text='Add', width=4, font=FONT, highlightthickness=0)
         self.add_button.grid(column=1, row=4, columnspan=5, sticky='N')
         self.add_button.bind("<Button>", controller.model_add_to_data)
-
-
-
-    # TODO : passwd = ttk.Entry(parent, textvariable=password, show="*")
-
-if __name__ == '__main__':
-    interface = View()
-    interface.mainloop()

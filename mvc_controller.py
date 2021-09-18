@@ -91,9 +91,3 @@ class Controller:
     # username already implemente above, uncomment only for future implementations
     # self.view.username_entry.insert(0, self.model.username_temp)
     # self.view.panel.password_entry.insert(0, self.model.password_temp)
-
-
-if __name__ == '__main__':
-    c = Controller()
-    c.model_get_last_used_credentials()
-
