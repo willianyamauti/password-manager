@@ -5,6 +5,7 @@ from mvc_model import Model
 from mvc_views import View
 from random import randint, choice, shuffle
 import string
+import json
 
 
 class Controller:
@@ -22,9 +23,9 @@ class Controller:
     def model_add_to_data(self, event):
         self.view_gather_user_inputs()
         if not self.model_check_input_size():
-            error_msg = self.model_size_of_input_error_message_box()
+            error_msg = self.view_size_of_input_error_message_box()
         else:
-            do_add = self.model_confirmation_message_box()
+            do_add = self.view_confirmation_message_box()
             if do_add:
                 self.model.update_database()
                 self.view_reset_fields()
@@ -36,23 +37,19 @@ class Controller:
             return True
 
     def model_get_last_used_credentials(self):
-        self.model.last_info = self.model.get_last_used_info()
+        self.model.last_info = self.model.get_database()
 
     def model_reset_database(self):
         self.model.reset_database()
 
-    def model_confirmation_message_box(self):
-        msg = f"These are the details entered: \nEmail: {self.model.username_temp}" \
-              f"\nPassword: {self.model.password_temp} \nDo you wish to save?"
-
-        return messagebox.askokcancel(title=self.model.website_temp, message=msg)
-
-
-    def model_size_of_input_error_message_box(self):
-        msg = f"Error: Failed to save login credentials.\n\n" \
-              f"There might be fields unfilled, check your input before continuing."
-
-        return messagebox.showinfo(title='System Fail', message=msg)
+    def model_find_password(self,event):
+        _website = self.view.panel.website_entry.get()
+        if _website in self.model.temp_data:
+            _username = self.model.temp_data[_website]['username']
+            _password = self.model.temp_data[_website]['password']
+            info_msg = self.view_search_info_message_box(_website, _username, _password)
+        else:
+            info_msg = self.view_search_info_message_box(_website)
 
     # ####--------------- View related methods ---------------#####
 
@@ -85,6 +82,28 @@ class Controller:
             self.view.panel.password_entry.config(show="*")
         else:
             self.view.panel.password_entry.config(show="")
+
+    def view_confirmation_message_box(self):
+        msg = f"These are the details entered: \nEmail: {self.model.username_temp}" \
+              f"\nPassword: {self.model.password_temp} \nDo you wish to save?"
+
+        return messagebox.askokcancel(title=self.model.website_temp, message=msg)
+
+    def view_size_of_input_error_message_box(self):
+        msg = f"Error: Failed to save login credentials.\n\n" \
+              f"There might be fields unfilled, check your input before continuing."
+
+        return messagebox.showinfo(title='System Fail', message=msg)
+
+    def view_search_info_message_box(self, website, username=None, password=None):
+        if username is not None and password is not None:
+            msg = f"Username: {username}\n" \
+                  f"Password: {password}\n"
+        else:
+            msg = f"NO details for {website} exists."
+
+        return messagebox.showinfo(title=website, message=msg)
+
 
     # fill the info with your last used username and password
     # def view_fill_with_last_used_credentials(self):
